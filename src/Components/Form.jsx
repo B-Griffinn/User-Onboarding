@@ -44,7 +44,7 @@ const UserForm = ( { errors, touched, values, status} ) => {
                 <ul key={user.id}>
                     <li>User Name: {user.name}</li>
                     <li>Email: {user.email}</li>
-                    <li>Password: {user.password}</li>
+                    <li>Password: Nice try!</li>
                 </ul>
             ))}
     </div>
@@ -62,15 +62,24 @@ const FormikUserForm = withFormik({
     },
     validationSchema: Yup.object().shape({
         name: Yup.string().required("Name is required!"),
-        email: Yup.string().required("Email Required."),
-        password: Yup.string().required("password required."),
+        name: Yup.string().required("Please Enter a name."),
+
+        email: Yup.string().required("Email Required!"),
+        email: Yup.string().required("Please enter an email."),
+
+        password: Yup.string().required("password required!"),
+        password: Yup.string().required("Please enter a password."),
+
         terms: Yup.string().required("Terms of service required."),
+        terms: Yup.string().required("Please check the box."),
     }),
-    handleSubmit(values, { setSubmitting }) {
+    handleSubmit(values, { setStatus, setSubmitting, resetForm }) {
         axios.post("https://reqres.in/api/users/", values)
         .then(res => {
             console.log(res.data);
-            setSubmitting(res.data)
+            resetForm();
+            setSubmitting(false);
+            setStatus(res.data);
         }) 
         .catch(err => {
             console.log(err.response)
